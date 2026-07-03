@@ -1,0 +1,11 @@
+D:\SpilLabsWeb\Web-Backend\Domain\bin\Debug\net10.0\Domain.deps.json
+D:\SpilLabsWeb\Web-Backend\Domain\bin\Debug\net10.0\Domain.dll
+D:\SpilLabsWeb\Web-Backend\Domain\bin\Debug\net10.0\Domain.pdb
+D:\SpilLabsWeb\Web-Backend\Domain\obj\Debug\net10.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\SpilLabsWeb\Web-Backend\Domain\obj\Debug\net10.0\Domain.AssemblyInfoInputs.cache
+D:\SpilLabsWeb\Web-Backend\Domain\obj\Debug\net10.0\Domain.AssemblyInfo.cs
+D:\SpilLabsWeb\Web-Backend\Domain\obj\Debug\net10.0\Domain.csproj.CoreCompileInputs.cache
+D:\SpilLabsWeb\Web-Backend\Domain\obj\Debug\net10.0\Domain.dll
+D:\SpilLabsWeb\Web-Backend\Domain\obj\Debug\net10.0\refint\Domain.dll
+D:\SpilLabsWeb\Web-Backend\Domain\obj\Debug\net10.0\Domain.pdb
+D:\SpilLabsWeb\Web-Backend\Domain\obj\Debug\net10.0\ref\Domain.dll
