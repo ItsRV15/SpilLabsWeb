@@ -1,0 +1,72 @@
+@media print {
+  /* Hide non-printable elements */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Show only the sales order form */
+  .min-h-screen.bg-gray-100,
+  .min-h-screen.bg-gray-100 * {
+    visibility: visible;
+  }
+
+  /* Reset positioning for print */
+  .min-h-screen.bg-gray-100 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: white !important;
+  }
+
+  /* Hide buttons and navigation in print */
+  button,
+  .flex.gap-2,
+  nav,
+  .bg-white.shadow-sm {
+    display: none !important;
+  }
+
+  /* Ensure form elements are visible */
+  form,
+  table,
+  input,
+  select,
+  textarea {
+    visibility: visible;
+    border: 1px solid #000 !important;
+  }
+
+  /* Page breaks */
+  .bg-white.border {
+    page-break-inside: avoid;
+    margin-bottom: 20px;
+  }
+
+  /* Ensure text is readable */
+  body {
+    font-size: 12pt;
+    color: #000;
+  }
+
+  /* Show all table rows */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: left;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+}
