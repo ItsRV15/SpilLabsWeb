@@ -10,34 +10,28 @@ public class ApplicationDbContext : DbContext
     {
     }
 
-    public DbSet<Client> Clients { get; set; }
-
-    public DbSet<Item> Items { get; set; }
-
-    public DbSet<SalesOrder> SalesOrders { get; set; }
-
-    public DbSet<SalesOrderDetail> SalesOrderDetails { get; set; }
+    public DbSet<Client> Clients => Set<Client>();
+    public DbSet<Item> Items => Set<Item>();
+    public DbSet<SalesOrder> SalesOrders => Set<SalesOrder>();
+    public DbSet<SalesOrderDetail> SalesOrderDetails => Set<SalesOrderDetail>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        // Client -> SalesOrder
         modelBuilder.Entity<SalesOrder>()
-            .HasOne(s => s.Client)
-            .WithMany(c => c.SalesOrders)
-            .HasForeignKey(s => s.ClientId);
+            .HasOne(x => x.Client)
+            .WithMany(x => x.SalesOrders)
+            .HasForeignKey(x => x.ClientId);
 
-        // SalesOrder -> SalesOrderDetail
         modelBuilder.Entity<SalesOrderDetail>()
-            .HasOne(d => d.SalesOrder)
-            .WithMany(o => o.SalesOrderDetails)
-            .HasForeignKey(d => d.OrderId);
+            .HasOne(x => x.SalesOrder)
+            .WithMany(x => x.SalesOrderDetails)
+            .HasForeignKey(x => x.OrderId);
 
-        // Item -> SalesOrderDetail
         modelBuilder.Entity<SalesOrderDetail>()
-            .HasOne(d => d.Item)
-            .WithMany(i => i.SalesOrderDetails)
-            .HasForeignKey(d => d.ItemId);
+            .HasOne(x => x.Item)
+            .WithMany(x => x.SalesOrderDetails)
+            .HasForeignKey(x => x.ItemId);
     }
 }
