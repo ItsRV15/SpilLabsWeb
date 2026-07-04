@@ -1,36 +1,63 @@
-using Application.Interfaces.Services;
+using API.Models;
+using Application.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ClientController : ControllerBase
+public class ClientsController : ControllerBase
 {
-    private readonly IClientService _clientService; //nstead of creating the service ourselves, 
-    //ASP.NET Core provides it automatically because we registered it in Program.cs.
+    private readonly IClientRepository _clientRepository;
 
-    public ClientController(IClientService clientService)
+    public ClientsController(IClientRepository clientRepository)
     {
-        _clientService = clientService;
+        _clientRepository = clientRepository;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAllClients()
     {
-        var clients = await _clientService.GetAllAsync();
+        var clients = await _clientRepository.GetAllAsync();
+        var result = clients.Select(client => new ClientDto
+        {
+            Id = client.ClientId,
+            Name = client.CustomerName,
+            Address1 = client.Address1,
+            Address2 = client.Address2,
+            Address3 = client.Address3,
+            Suburb = client.Suburb,
+            State = client.State,
+            PostCode = client.PostCode,
+            Phone = client.Phone,
+            Email = client.Email
+        });
 
-        return Ok(clients);
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetClientById(int id)
     {
-        var client = await _clientService.GetByIdAsync(id);
+        var client = await _clientRepository.GetByIdAsync(id);
 
         if (client == null)
             return NotFound();
 
-        return Ok(client);
+        var result = new ClientDto
+        {
+            Id = client.ClientId,
+            Name = client.CustomerName,
+            Address1 = client.Address1,
+            Address2 = client.Address2,
+            Address3 = client.Address3,
+            Suburb = client.Suburb,
+            State = client.State,
+            PostCode = client.PostCode,
+            Phone = client.Phone,
+            Email = client.Email
+        };
+
+        return Ok(result);
     }
 }
