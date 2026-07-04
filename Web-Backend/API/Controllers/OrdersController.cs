@@ -10,10 +10,12 @@ namespace API.Controllers;
 public class OrdersController : ControllerBase
 {
     private readonly ISalesOrderRepository _salesOrderRepository;
+    private readonly IItemRepository _itemRepository;
 
-    public OrdersController(ISalesOrderRepository salesOrderRepository)
+    public OrdersController(ISalesOrderRepository salesOrderRepository, IItemRepository itemRepository)
     {
         _salesOrderRepository = salesOrderRepository;
+        _itemRepository = itemRepository;
     }
 
     [HttpGet]
@@ -104,6 +106,8 @@ public class OrdersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateOrder([FromBody] CreateSalesOrderRequest request)
     {
+        var allItems = (await _itemRepository.GetAllAsync()).ToList();
+
         var order = new SalesOrder
         {
             ClientId = request.CustomerId,
@@ -114,9 +118,46 @@ public class OrdersController : ControllerBase
             TotalExcl = request.TotalExcl,
             TotalTax = request.TotalTax,
             TotalIncl = request.TotalIncl,
-            SalesOrderDetails = request.Items.Select(detail => new SalesOrderDetail
+            SalesOrderDetails = request.Items.Select(detail =>
             {
-                ItemId = 0,
+                var matchedItem = allItems.FirstOrDefault(item =>
+                    string.Equals(item.ItemCode, detail.ItemCode, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(item.Description, detail.Description, StringComparison.OrdinalIgnoreCase));
+
+                return new SalesOrderDetail
+                {
+                    ItemId = matchedItem?.ItemId ?? 0,
+                    Note = detail.Note,
+                    Quantity = detail.Quantity,
+                    Price = detail.Price,
+                    TaxRate = detail.TaxRate,
+                    ExclAmount = detail.ExclAmount,
+                    TaxAmount = detail.TaxAmount,
+                    InclAmount = detail.InclAmount
+                };
+            }).ToList()
+        };
+
+        await _salesOrderRepository.AddAsync(order);
+        await _salesOrderRepository.SaveChangesAsync();
+
+        var createdOrder = new SalesOrderDto
+        {
+            Id = order.OrderId,
+            CustomerId = order.ClientId,
+            CustomerName = string.Empty,
+            InvoiceNo = order.InvoiceNo,
+            InvoiceDate = order.InvoiceDate,
+            ReferenceNo = order.ReferenceNo,
+            Note = order.Note,
+            TotalExcl = order.TotalExcl,
+            TotalTax = order.TotalTax,
+            TotalIncl = order.TotalIncl,
+            CreatedAt = order.InvoiceDate,
+            Items = order.SalesOrderDetails.Select(detail => new SalesOrderItemDto
+            {
+                ItemCode = detail.Item?.ItemCode,
+                Description = detail.Item?.Description,
                 Note = detail.Note,
                 Quantity = detail.Quantity,
                 Price = detail.Price,
@@ -127,10 +168,7 @@ public class OrdersController : ControllerBase
             }).ToList()
         };
 
-        await _salesOrderRepository.AddAsync(order);
-        await _salesOrderRepository.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(GetOrderById), new { id = order.OrderId }, request);
+        return CreatedAtAction(nameof(GetOrderById), new { id = order.OrderId }, createdOrder);
     }
 
     [HttpPut("{id}")]
@@ -150,16 +188,25 @@ public class OrdersController : ControllerBase
         existing.TotalExcl = request.TotalExcl;
         existing.TotalTax = request.TotalTax;
         existing.TotalIncl = request.TotalIncl;
-        existing.SalesOrderDetails = request.Items.Select(detail => new SalesOrderDetail
+
+        var allItems = (await _itemRepository.GetAllAsync()).ToList();
+        existing.SalesOrderDetails = request.Items.Select(detail =>
         {
-            ItemId = 0,
-            Note = detail.Note,
-            Quantity = detail.Quantity,
-            Price = detail.Price,
-            TaxRate = detail.TaxRate,
-            ExclAmount = detail.ExclAmount,
-            TaxAmount = detail.TaxAmount,
-            InclAmount = detail.InclAmount
+            var matchedItem = allItems.FirstOrDefault(item =>
+                string.Equals(item.ItemCode, detail.ItemCode, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(item.Description, detail.Description, StringComparison.OrdinalIgnoreCase));
+
+            return new SalesOrderDetail
+            {
+                ItemId = matchedItem?.ItemId ?? 0,
+                Note = detail.Note,
+                Quantity = detail.Quantity,
+                Price = detail.Price,
+                TaxRate = detail.TaxRate,
+                ExclAmount = detail.ExclAmount,
+                TaxAmount = detail.TaxAmount,
+                InclAmount = detail.InclAmount
+            };
         }).ToList();
 
         await _salesOrderRepository.UpdateAsync(existing);
