@@ -33,6 +33,9 @@ const SalesOrder = () => {
     totalIncl: 0,
   });
 
+  const initialInvoiceNo = useMemo(() => '', []);
+  const initialReferenceNo = useMemo(() => '', []);
+
   const [loading, setLoading] = useState(false);
 
   // Fetch customers and items on mount
@@ -103,6 +106,25 @@ const SalesOrder = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const normalizeOrderPayload = (data) => ({
+    ...data,
+    invoiceNo: data.invoiceNo?.trim() || initialInvoiceNo,
+    referenceNo: data.referenceNo?.trim() || initialReferenceNo,
+    customerId: parseInt(data.customerId, 10),
+    totalExcl: parseFloat(data.totalExcl),
+    totalTax: parseFloat(data.totalTax),
+    totalIncl: parseFloat(data.totalIncl),
+    items: data.items.map(item => ({
+      ...item,
+      quantity: parseFloat(item.quantity),
+      price: parseFloat(item.price),
+      taxRate: parseFloat(item.taxRate),
+      exclAmount: parseFloat(item.exclAmount),
+      taxAmount: parseFloat(item.taxAmount),
+      inclAmount: parseFloat(item.inclAmount),
+    })),
+  });
+
   const handleCustomerChange = (e) => {
     const value = e.target.value;
     setFormData(prev => ({ ...prev, customerId: value }));
@@ -170,22 +192,7 @@ const SalesOrder = () => {
     setLoading(true);
 
     try {
-      const orderData = {
-        ...formData,
-        customerId: parseInt(formData.customerId),
-        totalExcl: parseFloat(formData.totalExcl),
-        totalTax: parseFloat(formData.totalTax),
-        totalIncl: parseFloat(formData.totalIncl),
-        items: formData.items.map(item => ({
-          ...item,
-          quantity: parseFloat(item.quantity),
-          price: parseFloat(item.price),
-          taxRate: parseFloat(item.taxRate),
-          exclAmount: parseFloat(item.exclAmount),
-          taxAmount: parseFloat(item.taxAmount),
-          inclAmount: parseFloat(item.inclAmount),
-        })),
-      };
+      const orderData = normalizeOrderPayload(formData);
 
       if (id) {
         await dispatch(updateOrder({ id: parseInt(id), orderData })).unwrap();
@@ -193,6 +200,7 @@ const SalesOrder = () => {
         await dispatch(createOrder(orderData)).unwrap();
       }
 
+      await dispatch(fetchOrders());
       navigate('/');
     } catch (error) {
       console.error('Error saving order:', error);
@@ -334,8 +342,8 @@ const SalesOrder = () => {
             <TextArea
               label="Note"
               name="note"
-              //value={formData.note}
-              //onChange={handleInputChange}
+              value={formData.note}
+              onChange={handleInputChange}
               placeholder="Enter order notes"
               rows={3}
             />
