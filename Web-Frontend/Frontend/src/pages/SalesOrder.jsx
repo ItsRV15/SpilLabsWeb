@@ -33,8 +33,6 @@ const SalesOrder = () => {
     totalIncl: 0,
   });
 
-  const initialInvoiceNo = useMemo(() => '', []);
-  const initialReferenceNo = useMemo(() => '', []);
 
   const [loading, setLoading] = useState(false);
 
@@ -108,8 +106,8 @@ const SalesOrder = () => {
 
   const normalizeOrderPayload = (data) => ({
     ...data,
-    invoiceNo: data.invoiceNo?.trim() || initialInvoiceNo,
-    referenceNo: data.referenceNo?.trim() || initialReferenceNo,
+    invoiceNo: data.invoiceNo?.trim() || '',
+    referenceNo: data.referenceNo?.trim() || '',
     customerId: parseInt(data.customerId, 10),
     totalExcl: parseFloat(data.totalExcl),
     totalTax: parseFloat(data.totalTax),
@@ -270,8 +268,8 @@ const SalesOrder = () => {
               <Input
                 label="Invoice No."
                 name="invoiceNo"
-                //value={formData.invoiceNo}
-                //onChange={handleInputChange}
+                value={formData.invoiceNo}
+                onChange={handleInputChange}
                 placeholder="Enter invoice number"
                 required
               />
@@ -286,8 +284,8 @@ const SalesOrder = () => {
               <Input
                 label="Reference No"
                 name="referenceNo"
-                //value={formData.referenceNo}
-                //onChange={handleInputChange}
+                value={formData.referenceNo}
+                onChange={handleInputChange}
                 placeholder="Enter reference number"
               />
             </div>
