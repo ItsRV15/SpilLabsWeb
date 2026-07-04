@@ -39,6 +39,15 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     await dbContext.Database.EnsureCreatedAsync();
+    
+    // Reset AUTO_INCREMENT for SalesOrder table to start from the next available ID
+    var maxOrderId = await dbContext.SalesOrders.MaxAsync(o => (int?)o.OrderId) ?? 0;
+    var nextOrderId = maxOrderId + 1;
+    var connection = dbContext.Database.GetDbConnection();
+    await connection.OpenAsync();
+    using var command = connection.CreateCommand();
+    command.CommandText = $"ALTER TABLE salesorder AUTO_INCREMENT = {nextOrderId}";
+    await command.ExecuteNonQueryAsync();
 }
 
 if (app.Environment.IsDevelopment())
