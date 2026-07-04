@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Input = ({ label, value, onChange, type = 'text', placeholder, required, disabled, className = '' }) => {
+export const Input = ({ label, name, value, onChange, type = 'text', placeholder, required, disabled, className = '' }) => {
   return (
     <div className={`mb-3 ${className}`}>
       {label && (
@@ -10,6 +10,7 @@ export const Input = ({ label, value, onChange, type = 'text', placeholder, requ
         </label>
       )}
       <input
+        name={name}
         type={type}
         value={value}
         onChange={onChange}
@@ -22,7 +23,7 @@ export const Input = ({ label, value, onChange, type = 'text', placeholder, requ
   );
 };
 
-export const Select = ({ label, value, onChange, options, placeholder, required, disabled, className = '' }) => {
+export const Select = ({ label, name, value, onChange, options, placeholder, required, disabled, className = '' }) => {
   return (
     <div className={`mb-3 ${className}`}>
       {label && (
@@ -32,6 +33,7 @@ export const Select = ({ label, value, onChange, options, placeholder, required,
         </label>
       )}
       <select
+        name={name}
         value={value}
         onChange={onChange}
         required={required}
@@ -49,7 +51,7 @@ export const Select = ({ label, value, onChange, options, placeholder, required,
   );
 };
 
-export const TextArea = ({ label, value, onChange, placeholder, rows = 4, required, disabled, className = '' }) => {
+export const TextArea = ({ label, name, value, onChange, placeholder, rows = 4, required, disabled, className = '' }) => {
   return (
     <div className={`mb-3 ${className}`}>
       {label && (
@@ -59,6 +61,7 @@ export const TextArea = ({ label, value, onChange, placeholder, rows = 4, requir
         </label>
       )}
       <textarea
+        name={name}
         value={value}
         onChange={onChange}
         placeholder={placeholder}

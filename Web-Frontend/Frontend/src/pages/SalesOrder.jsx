@@ -33,6 +33,8 @@ const SalesOrder = () => {
     totalIncl: 0,
   });
 
+  const initialInvoiceNo = useMemo(() => '', []);
+  const initialReferenceNo = useMemo(() => '', []);
 
   const [loading, setLoading] = useState(false);
 
@@ -106,8 +108,8 @@ const SalesOrder = () => {
 
   const normalizeOrderPayload = (data) => ({
     ...data,
-    invoiceNo: data.invoiceNo?.trim() || '',
-    referenceNo: data.referenceNo?.trim() || '',
+    invoiceNo: data.invoiceNo?.trim() || initialInvoiceNo,
+    referenceNo: data.referenceNo?.trim() || initialReferenceNo,
     customerId: parseInt(data.customerId, 10),
     totalExcl: parseFloat(data.totalExcl),
     totalTax: parseFloat(data.totalTax),
