@@ -1,6 +1,9 @@
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
+using Application.Interfaces.Repositories;
+using Infrastructure.Repositories;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +17,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
     ));
 
-    
+
+
+    builder.Services.AddScoped<IClientRepository, ClientRepository>();
+
+
 
 var app = builder.Build();
 
