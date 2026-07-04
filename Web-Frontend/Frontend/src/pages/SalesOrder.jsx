@@ -262,8 +262,8 @@ const SalesOrder = () => {
               <Input
                 label="Invoice No."
                 name="invoiceNo"
-                value={formData.invoiceNo}
-                onChange={handleInputChange}
+                //value={formData.invoiceNo}
+                //onChange={handleInputChange}
                 placeholder="Enter invoice number"
                 required
               />
@@ -278,8 +278,8 @@ const SalesOrder = () => {
               <Input
                 label="Reference No"
                 name="referenceNo"
-                value={formData.referenceNo}
-                onChange={handleInputChange}
+                //value={formData.referenceNo}
+                //onChange={handleInputChange}
                 placeholder="Enter reference number"
               />
             </div>
@@ -334,8 +334,8 @@ const SalesOrder = () => {
             <TextArea
               label="Note"
               name="note"
-              value={formData.note}
-              onChange={handleInputChange}
+              //value={formData.note}
+              //onChange={handleInputChange}
               placeholder="Enter order notes"
               rows={3}
             />
